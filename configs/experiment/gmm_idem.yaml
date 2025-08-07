@@ -14,7 +14,7 @@ tags: ["GMM", "iDEM"]
 seed: 12345
 
 logger:
-  wandb:
+  wandb: 
     tags: ${tags}
     group: "gmm"
 
