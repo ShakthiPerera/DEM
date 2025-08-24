@@ -668,22 +668,51 @@ class DEMLitModule(LightningModule):
             prog_bar=True,
         )
 
+    # def _compute_total_var(self, generated_samples, data_set):
+    #     generated_samples_dists = (
+    #         self.energy_function.interatomic_dist(generated_samples).cpu().numpy().reshape(-1),
+    #     )
+    #     data_set_dists = self.energy_function.interatomic_dist(data_set).cpu().numpy().reshape(-1)
+
+    #     H_data_set, x_data_set = np.histogram(data_set_dists, bins=200)
+    #     H_generated_samples, _ = np.histogram(generated_samples_dists, bins=(x_data_set))
+    #     total_var = (
+    #         0.5
+    #         * np.abs(
+    #             H_data_set / H_data_set.sum() - H_generated_samples / H_generated_samples.sum()
+    #         ).sum()
+    #     )
+
+    #     return total_var
+    
     def _compute_total_var(self, generated_samples, data_set):
-        generated_samples_dists = (
-            self.energy_function.interatomic_dist(generated_samples).cpu().numpy().reshape(-1),
-        )
-        data_set_dists = self.energy_function.interatomic_dist(data_set).cpu().numpy().reshape(-1)
+        # Check if energy_function supports interatomic_dist
+        if not hasattr(self.energy_function, "interatomic_dist"):
+            # Skip TV calculation for GMM; return NaN or a default value
+            return float("nan")
 
-        H_data_set, x_data_set = np.histogram(data_set_dists, bins=200)
-        H_generated_samples, _ = np.histogram(generated_samples_dists, bins=(x_data_set))
-        total_var = (
-            0.5
-            * np.abs(
-                H_data_set / H_data_set.sum() - H_generated_samples / H_generated_samples.sum()
-            ).sum()
+        # Otherwise, proceed with TV computation
+        gen_dists = (
+            self.energy_function.interatomic_dist(generated_samples)
+            .cpu()
+            .numpy()
+            .reshape(-1)
+        )
+        data_dists = (
+            self.energy_function.interatomic_dist(data_set)
+            .cpu()
+            .numpy()
+            .reshape(-1)
         )
 
+        # Compute histograms over same bin edges
+        H_data, x_edges = np.histogram(data_dists, bins=200, density=True)
+        H_gen, _ = np.histogram(gen_dists, bins=x_edges, density=True)
+
+        # Total Variation: ½ sum of absolute difference between densities
+        total_var = 0.5 * np.abs(H_data - H_gen).sum()
         return total_var
+
 
     def compute_log_z(self, cnf, prior, samples, prefix, name):
         nll, _, _, _ = self.compute_nll(cnf, prior, samples)
@@ -1028,7 +1057,7 @@ class DEMLitModule(LightningModule):
         )
         names = [f"test/full_batch/{name}" for name in names]
         d = dict(zip(names, dists))
-
+        
         d["test/full_batch/dist_total_var"] = self._compute_total_var(
             self.energy_function.unnormalize(final_samples), test_set
         )

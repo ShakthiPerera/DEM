@@ -23,7 +23,7 @@ data:
   n_val_batches_per_epoch: 4
 
 trainer:
-  check_val_every_n_epoch: 5
+  check_val_every_n_epoch: 100
   max_epochs: 2000
 
 model:

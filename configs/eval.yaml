@@ -6,7 +6,7 @@ defaults:
   - energy: gmm
   - model: dem
   - launcher: null
-  - logger: wandb
+  - logger: tensorboard
   - trainer: default
   - paths: default
   - extras: default

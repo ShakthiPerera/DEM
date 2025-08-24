@@ -43,7 +43,7 @@ nll_integration_method: dopri5
 tol: 1e-5
 
 nll_with_cfm: false
-nll_with_dem: false
+nll_with_dem: true
 nll_on_buffer: false
 # compute the nll on the train data
 # this is in addition to buffer and test
@@ -61,7 +61,7 @@ input_scaling_factor: null
 output_scaling_factor: null
 
 # compile model for faster training with pytorch 2.0
-compile: false
+compile: true
 
 use_richardsons: false
 
