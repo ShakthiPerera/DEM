@@ -9,7 +9,7 @@ defaults:
   - model: dem
   - callbacks: default
   - launcher: null
-  - logger: tensorboard # set logger here or use command line (e.g. `python train.py logger=tensorboard`)
+  - logger: null # set logger here or use command line (e.g. `python train.py logger=tensorboard`)
   - trainer: default
   - paths: default
   - extras: default
@@ -38,13 +38,13 @@ task_name: "train"
 tags: ["dev"]
 
 # set False to skip model training
-train: True
+train: False
 
 # evaluate on test set, using best model weights achieved during training
 # lightning chooses best weights based on the metric specified in checkpoint callback
 test: True
   
 # simply provide checkpoint path to resume training
-ckpt_path: 
+ckpt_path:
 # seed for random number generators in pytorch, numpy and python.random
 seed: 1234

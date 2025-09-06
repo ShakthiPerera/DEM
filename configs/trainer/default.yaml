@@ -12,10 +12,9 @@ devices: 1
 precision: 16
 
 # perform a validation loop every N training epochs
-check_val_every_n_epoch: 10
+check_val_every_n_epoch: 50
 
-enable_progress_bar: True
-
+enable_model_summary: false
 # set True to to ensure deterministic results
 # makes training slower but gives more reproducibility than just setting seeds
 deterministic: False
@@ -23,3 +22,5 @@ deterministic: False
 gradient_clip_val: 0.5
 
 inference_mode: false
+
+log_every_n_steps: 100

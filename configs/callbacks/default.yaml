@@ -1,7 +1,7 @@
 defaults:
   - model_checkpoint
   - model_summary
-  - rich_progress_bar
+  # - tqdm_progress_bar
   - _self_
 
 model_checkpoint:
@@ -11,7 +11,7 @@ model_checkpoint:
   mode: "min"
   every_n_epochs: ${trainer.check_val_every_n_epoch} # number of epochs between checkpoints
   save_last: True
-  save_top_k: 5
+  save_top_k: 3
   auto_insert_metric_name: False
   verbose: true
 

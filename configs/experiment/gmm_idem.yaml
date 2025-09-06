@@ -13,11 +13,6 @@ tags: ["GMM", "iDEM"]
 
 seed: 12345
 
-logger:
-  wandb: 
-    tags: ${tags}
-    group: "gmm"
-
 model:
   noise_schedule:
     _target_: dem.models.components.noise_schedules.GeometricNoiseSchedule
