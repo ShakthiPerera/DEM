@@ -586,11 +586,11 @@ class DEMLitModule(LightningModule):
 
         self.buffer.add(self.last_samples, self.last_energies)
 
-        self._log_energy_w2(prefix="val")
+        # self._log_energy_w2(prefix="val")
 
-        if self.energy_function.is_molecule:
-            self._log_dist_w2(prefix="val")
-            self._log_dist_total_var(prefix="val")
+        # if self.energy_function.is_molecule:
+        #     self._log_dist_w2(prefix="val")
+        #     self._log_dist_total_var(prefix="val")
 
     def _log_energy_w2(self, prefix="val"):
         if prefix == "test":
@@ -1071,10 +1071,10 @@ class DEMLitModule(LightningModule):
         print(f"Saving samples to {path}")
         import os
 
-        os.makedirs(self.energy_function.name, exist_ok=True)
-        path2 = f"{self.energy_function.name}/samples_{self.hparams.version}_{self.num_samples_to_save}.pt"
-        torch.save(final_samples, path2)
-        print(f"Saving samples to {path2}")
+        # os.makedirs(self.energy_function.name, exist_ok=True)
+        # path2 = f"{self.energy_function.name}/samples_{self.hparams.version}_{self.num_samples_to_save}.pt"
+        # torch.save(final_samples, path2)
+        # print(f"Saving samples to {path2}")
 
     def setup(self, stage: str) -> None:
         """Lightning hook that is called at the beginning of fit (train + validate), validate,

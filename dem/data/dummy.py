@@ -10,15 +10,17 @@ class DummyDataModule(LightningDataModule):
         n_val_batches_per_epoch: int = 1,
         n_test_batches_per_epoch: int = 1,
         batch_size: int = 1,
+        num_workers: int = 1,
     ):
         super().__init__()
         self.n_train_batches_per_epoch = n_train_batches_per_epoch
         self.n_val_batches_per_epoch = n_val_batches_per_epoch
         self.n_test_batches_per_epoch = n_test_batches_per_epoch
         self.batch_size = batch_size
+        self.num_workers = num_workers
 
     def get_dataloader(self, size):
-        return DataLoader(np.arange(size * self.batch_size)[:, None], batch_size=self.batch_size)
+        return DataLoader(np.arange(size * self.batch_size)[:, None], batch_size=self.batch_size, num_workers=31)
 
     def train_dataloader(self):
         return self.get_dataloader(self.n_train_batches_per_epoch)
