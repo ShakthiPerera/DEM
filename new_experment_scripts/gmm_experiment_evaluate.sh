@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # List of trained dimensions
-DIMS="128"
+DIMS="2 4 128"
 
 # Common overrides (shared for all runs)
 BASE_OVERRIDES="energy.n_mixes=8 energy.loc_scaling=8 energy.data_normalization_factor=11"
