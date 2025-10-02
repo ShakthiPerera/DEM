@@ -11,7 +11,7 @@ defaults:
 
 tags: ["GMM", "iDEM"]
 
-seed: 12345
+seed: 123
 
 model:
   noise_schedule:

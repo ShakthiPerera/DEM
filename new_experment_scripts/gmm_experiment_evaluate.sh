@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # List of trained dimensions
-DIMS="2 4 128"
+DIMS="8 16 32 256"
 
 # Common overrides (shared for all runs)
 BASE_OVERRIDES="energy.n_mixes=8 energy.loc_scaling=8 energy.data_normalization_factor=11"
@@ -12,7 +12,7 @@ model.init_from_prior=true model.use_buffer=true model.num_samples_to_save=10000
 export CUDA_VISIBLE_DEVICES=1
 
 for DIM in $DIMS; do
-  BASE_DIR="outputs/gmm_8modes_dim${DIM}"
+  BASE_DIR="experiment3/gmm_8modes_dim${DIM}"
   CKPT_DIR="${BASE_DIR}/train/checkpoints"
 
   if [ ! -d "$CKPT_DIR" ]; then
@@ -27,16 +27,18 @@ for DIM in $DIMS; do
 
     echo "Running evaluation for dim=${DIM}, checkpoint=${CKPT_NAME}"
 
-    # Dimension-dependent overrides
-    if [ $DIM -le 8 ]; then
-      DIM_OVERRIDES="model.num_estimator_mc_samples=500 model.num_samples_to_generate_per_epoch=1000 model.num_integration_steps=200 model.eval_batch_size=1000"
-    elif [ $DIM -le 32 ]; then
-      DIM_OVERRIDES="model.num_estimator_mc_samples=700 model.num_samples_to_generate_per_epoch=1000 model.num_integration_steps=200 model.eval_batch_size=1000"
-    elif [ $DIM -le 64 ]; then
-      DIM_OVERRIDES="model.num_estimator_mc_samples=1000 model.num_samples_to_generate_per_epoch=512 model.num_integration_steps=200 model.eval_batch_size=512"
-    else
-      DIM_OVERRIDES="model.num_estimator_mc_samples=1000 model.num_samples_to_generate_per_epoch=512 model.num_integration_steps=300 model.eval_batch_size=512 model.buffer.max_length=20000"
-    fi
+  # Dim-dependent overrides
+  if [ $DIM -le 8 ]; then
+    DIM_OVERRIDES="model.num_estimator_mc_samples=500 model.num_samples_to_generate_per_epoch=1000 model.num_integration_steps=200 model.eval_batch_size=1000"
+  elif [ $DIM -le 32 ]; then
+    DIM_OVERRIDES="model.num_estimator_mc_samples=700 model.num_samples_to_generate_per_epoch=1000 model.num_integration_steps=200 model.eval_batch_size=1000"
+  elif [ $DIM -le 64 ]; then
+    DIM_OVERRIDES="model.num_estimator_mc_samples=1000 model.num_samples_to_generate_per_epoch=512 model.num_integration_steps=200 model.eval_batch_size=512"
+  elif [ $DIM -le 128 ]; then
+    DIM_OVERRIDES="model.num_estimator_mc_samples=1000 model.num_samples_to_generate_per_epoch=512 model.num_integration_steps=300 model.eval_batch_size=512"
+  else
+    DIM_OVERRIDES="model.num_estimator_mc_samples=1000 model.num_samples_to_generate_per_epoch=512 model.num_integration_steps=300 model.eval_batch_size=512"
+  fi
 
     # Run evaluation and save results
     python dem/eval.py experiment=gmm_idem \
